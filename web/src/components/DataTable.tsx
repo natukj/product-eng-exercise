@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   AccessorFn,
   Row,
@@ -50,8 +50,8 @@ export function DataTable<RowType>({
   );
   const filterRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
       Object.entries(openFilters).forEach(([columnName, isOpen]) => {
         if (
           isOpen &&
@@ -60,32 +60,25 @@ export function DataTable<RowType>({
           toggleFilter(columnName);
         }
       });
-    },
-    [openFilters, toggleFilter]
-  );
+    };
 
-  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleClickOutside]);
+  }, [openFilters, toggleFilter]);
 
   const columnHelper = createColumnHelper<RowType>();
 
-  const columns = useMemo(
-    () =>
-      schema.map((columnSchema) =>
-        columnHelper.accessor((row: any) => row, {
-          id: columnSchema.headerName,
-          header: columnSchema.headerName,
-          cell: (info) =>
-            columnSchema.cellRenderer(info.row.original, info.row.index),
-          sortingFn: columnSchema.sortingFunction,
-          enableSorting: !!columnSchema.sortingFunction,
-        })
-      ),
-    [schema]
+  const columns = schema.map((columnSchema) =>
+    columnHelper.accessor((row: any) => row, {
+      id: columnSchema.headerName,
+      header: columnSchema.headerName,
+      cell: (info) =>
+        columnSchema.cellRenderer(info.row.original, info.row.index),
+      sortingFn: columnSchema.sortingFunction,
+      enableSorting: !!columnSchema.sortingFunction,
+    })
   );
 
   const table = useReactTable({
@@ -99,23 +92,17 @@ export function DataTable<RowType>({
     },
   });
 
-  const activeFilters = useMemo(
-    () =>
-      schema
-        .flatMap((s) =>
-          (s.filterValue || []).map((value) => ({
-            column: s.headerName,
-            value,
-            onRemove: () => {
-              s.onFilterChange?.(
-                s.filterValue?.filter((v) => v !== value) || []
-              );
-            },
-          }))
-        )
-        .filter((f) => f.value),
-    [schema]
-  );
+  const activeFilters = schema
+    .flatMap((s) =>
+      (s.filterValue || []).map((value) => ({
+        column: s.headerName,
+        value,
+        onRemove: () => {
+          s.onFilterChange?.(s.filterValue?.filter((v) => v !== value) || []);
+        },
+      }))
+    )
+    .filter((f) => f.value);
 
   return (
     <div className="hide-scroll-bar h-full overflow-hidden overflow-y-auto rounded-lg border bg-white">

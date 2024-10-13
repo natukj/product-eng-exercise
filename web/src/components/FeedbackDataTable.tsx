@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React from "react";
 import { DataTable } from "./DataTable";
 import { FeedbackData } from "../hooks";
 import { Filters } from "../types";
@@ -32,132 +32,95 @@ export function FeedbackDataTable({
   openFilters,
   toggleFilter,
 }: FeedbackDataTableProps) {
-  const handleImportanceFilterChange = useCallback(
-    (values: string[]) => {
-      setFilters((prev) => ({
-        ...prev,
-        importance: values as Filters["importance"],
-      }));
+  const handleImportanceFilterChange = (values: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      importance: values as Filters["importance"],
+    }));
+  };
+
+  const handleTypeFilterChange = (values: string[]) => {
+    setFilters((prev) => ({ ...prev, type: values as Filters["type"] }));
+  };
+
+  const handleCustomerFilterChange = (values: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      customer: values as Filters["customer"],
+    }));
+  };
+
+  const nameCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
+    <div className="py-3">
+      <div className="mb-2 font-semibold">{row.name}</div>
+      <div className="text-sm">{row.description}</div>
+    </div>
+  );
+
+  const importanceCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.importance}</div>
+    </div>
+  );
+
+  const typeCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.type}</div>
+    </div>
+  );
+
+  const customerCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.customer}</div>
+    </div>
+  );
+
+  const dateCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{new Date(row.date).toLocaleDateString()}</div>
+    </div>
+  );
+
+  const schema = [
+    {
+      cellRenderer: nameCellRenderer,
+      headerName: "Name",
     },
-    [setFilters]
-  );
-
-  const handleTypeFilterChange = useCallback(
-    (values: string[]) => {
-      setFilters((prev) => ({ ...prev, type: values as Filters["type"] }));
+    {
+      cellRenderer: importanceCellRenderer,
+      headerName: "Importance",
+      filterType: "multi-select" as const,
+      filterOptions: IMPORTANCE_OPTIONS,
+      filterValue: filters.importance,
+      onFilterChange: handleImportanceFilterChange,
     },
-    [setFilters]
-  );
-
-  const handleCustomerFilterChange = useCallback(
-    (values: string[]) => {
-      setFilters((prev) => ({
-        ...prev,
-        customer: values as Filters["customer"],
-      }));
+    {
+      cellRenderer: typeCellRenderer,
+      headerName: "Type",
+      filterType: "multi-select" as const,
+      filterOptions: TYPE_OPTIONS,
+      filterValue: filters.type,
+      onFilterChange: handleTypeFilterChange,
     },
-    [setFilters]
-  );
-
-  const nameCellRenderer: AccessorFn<FeedbackData[number]> = useCallback(
-    (row) => (
-      <div className="py-3">
-        <div className="mb-2 font-semibold">{row.name}</div>
-        <div className="text-sm">{row.description}</div>
-      </div>
-    ),
-    []
-  );
-
-  const importanceCellRenderer: AccessorFn<FeedbackData[number]> = useCallback(
-    (row) => (
-      <div className="py-3">
-        <div className="mb-2">{row.importance}</div>
-      </div>
-    ),
-    []
-  );
-
-  const typeCellRenderer: AccessorFn<FeedbackData[number]> = useCallback(
-    (row) => (
-      <div className="py-3">
-        <div className="mb-2">{row.type}</div>
-      </div>
-    ),
-    []
-  );
-
-  const customerCellRenderer: AccessorFn<FeedbackData[number]> = useCallback(
-    (row) => (
-      <div className="py-3">
-        <div className="mb-2">{row.customer}</div>
-      </div>
-    ),
-    []
-  );
-
-  const dateCellRenderer: AccessorFn<FeedbackData[number]> = useCallback(
-    (row) => (
-      <div className="py-3">
-        <div className="mb-2">{new Date(row.date).toLocaleDateString()}</div>
-      </div>
-    ),
-    []
-  );
-
-  const schema = useMemo(
-    () => [
-      {
-        cellRenderer: nameCellRenderer,
-        headerName: "Name",
-      },
-      {
-        cellRenderer: importanceCellRenderer,
-        headerName: "Importance",
-        filterType: "multi-select" as const,
-        filterOptions: IMPORTANCE_OPTIONS,
-        filterValue: filters.importance,
-        onFilterChange: handleImportanceFilterChange,
-      },
-      {
-        cellRenderer: typeCellRenderer,
-        headerName: "Type",
-        filterType: "multi-select" as const,
-        filterOptions: TYPE_OPTIONS,
-        filterValue: filters.type,
-        onFilterChange: handleTypeFilterChange,
-      },
-      {
-        cellRenderer: customerCellRenderer,
-        headerName: "Customer",
-        filterType: "multi-select" as const,
-        filterOptions: CUSTOMER_OPTIONS,
-        filterValue: filters.customer,
-        onFilterChange: handleCustomerFilterChange,
-      },
-      {
-        cellRenderer: dateCellRenderer,
-        headerName: "Date",
-        sortingFunction: (
-          a: Row<FeedbackData[number]>,
-          b: Row<FeedbackData[number]>
-        ) =>
-          new Date(a.original.date).getTime() -
-          new Date(b.original.date).getTime(),
-      },
-    ],
-    [
-      filters,
-      handleImportanceFilterChange,
-      handleTypeFilterChange,
-      handleCustomerFilterChange,
-      nameCellRenderer,
-      importanceCellRenderer,
-      typeCellRenderer,
-      customerCellRenderer,
-      dateCellRenderer,
-    ]
-  );
+    {
+      cellRenderer: customerCellRenderer,
+      headerName: "Customer",
+      filterType: "multi-select" as const,
+      filterOptions: CUSTOMER_OPTIONS,
+      filterValue: filters.customer,
+      onFilterChange: handleCustomerFilterChange,
+    },
+    {
+      cellRenderer: dateCellRenderer,
+      headerName: "Date",
+      sortingFunction: (
+        a: Row<FeedbackData[number]>,
+        b: Row<FeedbackData[number]>
+      ) =>
+        new Date(a.original.date).getTime() -
+        new Date(b.original.date).getTime(),
+    },
+  ];
 
   return (
     <DataTable
