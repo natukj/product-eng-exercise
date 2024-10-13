@@ -11,5 +11,5 @@ export type Filters = {
       | "Linear"
       | "OpenAI"
     )[];
-    date: [string, string] | null;
+    date: string | null;
   };

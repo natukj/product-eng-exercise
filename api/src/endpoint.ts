@@ -15,16 +15,15 @@ type Filters = {
     | "Linear"
     | "OpenAI"
   )[];
-  date: [string, string] | null;
+  date: string | null;
 };
 
 type Feedback = {
   id: number;
-  name: string;
   description: string;
-  importance: "High" | "Medium" | "Low";
-  type: "Sales" | "Customer" | "Research";
-  customer: "Loom" | "Ramp" | "Brex" | "Vanta" | "Notion" | "Linear" | "OpenAI";
+} & {
+  [K in keyof Omit<Filters, 'date'>]: Filters[K] extends Array<infer U> ? U : Filters[K];
+} & {
   date: string;
 };
 
@@ -42,17 +41,11 @@ function queryHandler(req: Request, res: Response<{ data: FeedbackData }>) {
   const { filters } = req.body as { filters: Filters };
 
   /**
-   * TODO(part-1): Implement query handling
+   * (part-1): Implement query handling
    */
   let filteredData = feedback;
 
-  // filter by name (search)
-  if (filters.name && filters.name.trim() !== "") {
-    const searchTerm = filters.name.trim().toLowerCase();
-    filteredData = filteredData.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm)
-    );
-  }
+  // TODO filter by name (search)
 
   if (filters.importance && filters.importance.length > 0) {
     filteredData = filteredData.filter((item) =>

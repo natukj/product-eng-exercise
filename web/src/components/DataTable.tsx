@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import {
   AccessorFn,
   Row,
@@ -10,7 +10,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import cx from "classnames";
-import { IoFilterOutline } from "react-icons/io5";
+import {
+  IoFilterOutline,
+  IoCaretUpOutline,
+  IoCaretDownOutline,
+} from "react-icons/io5";
 
 type Props<RowType> = {
   className?: string;
@@ -46,8 +50,8 @@ export function DataTable<RowType>({
   );
   const filterRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
       Object.entries(openFilters).forEach(([columnName, isOpen]) => {
         if (
           isOpen &&
@@ -56,24 +60,32 @@ export function DataTable<RowType>({
           toggleFilter(columnName);
         }
       });
-    }
+    },
+    [openFilters, toggleFilter]
+  );
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openFilters, toggleFilter]);
+  }, [handleClickOutside]);
 
   const columnHelper = createColumnHelper<RowType>();
 
-  const columns = schema.map((columnSchema) =>
-    columnHelper.accessor(columnSchema.cellRenderer, {
-      header: columnSchema.headerName,
-      cell: (info) => info.renderValue(),
-      sortingFn: columnSchema.sortingFunction,
-      enableSorting: !!columnSchema.sortingFunction,
-      sortUndefined: "last",
-    })
+  const columns = useMemo(
+    () =>
+      schema.map((columnSchema) =>
+        columnHelper.accessor((row: any) => row, {
+          id: columnSchema.headerName,
+          header: columnSchema.headerName,
+          cell: (info) =>
+            columnSchema.cellRenderer(info.row.original, info.row.index),
+          sortingFn: columnSchema.sortingFunction,
+          enableSorting: !!columnSchema.sortingFunction,
+        })
+      ),
+    [schema]
   );
 
   const table = useReactTable({
@@ -87,17 +99,23 @@ export function DataTable<RowType>({
     },
   });
 
-  const activeFilters = schema
-    .flatMap((s) =>
-      (s.filterValue || []).map((value) => ({
-        column: s.headerName,
-        value,
-        onRemove: () => {
-          s.onFilterChange?.(s.filterValue?.filter((v) => v !== value) || []);
-        },
-      }))
-    )
-    .filter((f) => f.value);
+  const activeFilters = useMemo(
+    () =>
+      schema
+        .flatMap((s) =>
+          (s.filterValue || []).map((value) => ({
+            column: s.headerName,
+            value,
+            onRemove: () => {
+              s.onFilterChange?.(
+                s.filterValue?.filter((v) => v !== value) || []
+              );
+            },
+          }))
+        )
+        .filter((f) => f.value),
+    [schema]
+  );
 
   return (
     <div className="hide-scroll-bar h-full overflow-hidden overflow-y-auto rounded-lg border bg-white">
@@ -106,7 +124,9 @@ export function DataTable<RowType>({
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
-                const columnSchema = schema[header.index];
+                const columnSchema = schema.find(
+                  (s) => s.headerName === header.id
+                );
                 return (
                   <th
                     key={header.id}
@@ -122,8 +142,16 @@ export function DataTable<RowType>({
                           header.column.columnDef.header,
                           header.getContext()
                         )}
+                        <span className="ml-2">
+                          {header.column.getIsSorted() === "desc" && (
+                            <IoCaretDownOutline />
+                          )}
+                          {header.column.getIsSorted() === "asc" && (
+                            <IoCaretUpOutline />
+                          )}
+                        </span>
                       </div>
-                      {columnSchema.filterType === "multi-select" && (
+                      {columnSchema?.filterType === "multi-select" && (
                         <div
                           ref={(el) =>
                             (filterRefs.current[columnSchema.headerName] = el)
@@ -205,10 +233,8 @@ export function DataTable<RowType>({
                         type="button"
                         className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500"
                         onClick={filter.onRemove}
+                        aria-label={`Remove filter for ${filter.value}`}
                       >
-                        <span className="sr-only">
-                          Remove filter for {filter.value}
-                        </span>
                         <svg
                           className="h-2 w-2"
                           stroke="currentColor"
@@ -232,7 +258,7 @@ export function DataTable<RowType>({
             <tr
               key={row.id}
               className="hover:cursor-default hover:bg-gray-100"
-              onMouseDown={(e) => e.button === 0 && onRowClick?.(row.original)}
+              onClick={() => onRowClick?.(row.original)}
               style={{ height: 64 }}
             >
               {row.getVisibleCells().map((cell) => (
