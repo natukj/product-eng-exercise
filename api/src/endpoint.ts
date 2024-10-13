@@ -2,6 +2,22 @@ import bodyParser from "body-parser";
 import express, { Request, Response } from "express";
 import json from "./data.json";
 
+type Filters = {
+  name: string;
+  importance: ("High" | "Medium" | "Low")[];
+  type: ("Sales" | "Customer" | "Research")[];
+  customer: (
+    | "Loom"
+    | "Ramp"
+    | "Brex"
+    | "Vanta"
+    | "Notion"
+    | "Linear"
+    | "OpenAI"
+  )[];
+  date: [string, string] | null;
+};
+
 type Feedback = {
   id: number;
   name: string;
@@ -23,13 +39,42 @@ router.post("/groups", groupHandler);
 const feedback: FeedbackData = json as any;
 
 function queryHandler(req: Request, res: Response<{ data: FeedbackData }>) {
-  const body = req;
+  const { filters } = req.body as { filters: Filters };
 
   /**
    * TODO(part-1): Implement query handling
    */
+  let filteredData = feedback;
 
-  res.status(200).json({ data: feedback });
+  // filter by name (search)
+  if (filters.name && filters.name.trim() !== "") {
+    const searchTerm = filters.name.trim().toLowerCase();
+    filteredData = filteredData.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  if (filters.importance && filters.importance.length > 0) {
+    filteredData = filteredData.filter((item) =>
+      filters.importance?.includes(item.importance)
+    );
+  }
+
+  if (filters.type && filters.type.length > 0) {
+    filteredData = filteredData.filter((item) =>
+      filters.type?.includes(item.type)
+    );
+  }
+
+  if (filters.customer && filters.customer.length > 0) {
+    filteredData = filteredData.filter((item) =>
+      filters.customer?.includes(item.customer)
+    );
+  }
+
+  // TODO add date filtering
+
+  res.status(200).json({ data: filteredData });
 }
 
 type FeedbackGroup = {

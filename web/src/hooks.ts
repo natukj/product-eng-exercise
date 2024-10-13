@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Filters } from "./types";
 
 type Feedback = {
   id: number;
@@ -17,14 +18,14 @@ export type FeedbackGroup = {
   feedback: Feedback[];
 };
 
-export function useFeedbackQuery(query: unknown) {
+export function useFeedbackQuery(filters: Filters) {
   return useQuery<{ data: FeedbackData }>({
     queryFn: async () => {
       const res = await fetch("http://localhost:5001/query", {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ filters }),
         method: "POST",
       });
 
@@ -32,7 +33,7 @@ export function useFeedbackQuery(query: unknown) {
     },
     // The query key is used to cache responses and should represent
     // the parameters of the query.
-    queryKey: ["query-data"],
+    queryKey: ["query-data", filters],
   });
 }
 

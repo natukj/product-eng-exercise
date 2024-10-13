@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavTabs, TabConfig } from "./components/NavTabs";
 import { Feedback } from "./Feedback";
 import { Groups } from "./Groups";
+import { Filters } from "./types";
 
 export const TabsConfig: TabConfig = {
   feedback: {
@@ -17,6 +18,14 @@ export const TabsConfig: TabConfig = {
 function App() {
   const [selectedTab, setSelectedTab] = useState("feedback");
 
+  const [filters, setFilters] = useState<Filters>({
+    name: "",
+    importance: [],
+    type: [],
+    customer: [],
+    date: null,
+  });
+
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="w-5/6 h-4/5 flex flex-col gap-y-4">
@@ -28,13 +37,10 @@ function App() {
           }}
           selectedTab={selectedTab}
         />
-        {/**
-         * TODO(part-1): Add filter options
-         */}
         {selectedTab === "feedback" ? (
-          <Feedback filters={{}} />
+          <Feedback filters={filters} setFilters={setFilters} />
         ) : (
-          <Groups filters={{}} />
+          <Groups filters={filters} />
         )}
       </div>
     </div>
