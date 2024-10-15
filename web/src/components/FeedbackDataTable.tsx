@@ -12,7 +12,6 @@ type FeedbackDataTableProps = {
   toggleFilter: (columnName: string) => void;
 };
 
-// filter options
 const IMPORTANCE_OPTIONS = ["High", "Medium", "Low"];
 const TYPE_OPTIONS = ["Sales", "Customer", "Research"];
 const CUSTOMER_OPTIONS = [
@@ -49,7 +48,7 @@ export function FeedbackDataTable({
       customer: values as Filters["customer"],
     }));
   };
-
+  // TODDO: Implement filter by name (search)
   const nameCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
     <div className="py-3">
       <div className="mb-2 font-semibold">{row.name}</div>
@@ -74,10 +73,12 @@ export function FeedbackDataTable({
       <div className="mb-2">{row.customer}</div>
     </div>
   );
-
+  // TODO: Add date filtering
   const dateCellRenderer: AccessorFn<FeedbackData[number]> = (row) => (
     <div className="py-3">
-      <div className="mb-2">{new Date(row.date).toLocaleDateString()}</div>
+      <div className="mb-2">
+        {row.date ? new Date(row.date).toLocaleDateString() : "N/A"}
+      </div>
     </div>
   );
 
@@ -117,8 +118,8 @@ export function FeedbackDataTable({
         a: Row<FeedbackData[number]>,
         b: Row<FeedbackData[number]>
       ) =>
-        new Date(a.original.date).getTime() -
-        new Date(b.original.date).getTime(),
+        new Date(a.original.date ?? 0).getTime() -
+        new Date(b.original.date ?? 0).getTime(),
     },
   ];
 

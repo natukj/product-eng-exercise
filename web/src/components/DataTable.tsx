@@ -204,21 +204,21 @@ export function DataTable<RowType>({
         </thead>
         <tbody>
           {activeFilters.length > 0 && (
-            <tr className="bg-gray-50">
+            <tr className="bg-gray-100">
               <td colSpan={table.getAllColumns().length} className="px-6 py-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-gray-500">
+                  <span className="text-sm font-medium text-gray-700">
                     Filters:
                   </span>
                   {activeFilters.map((filter, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-0.5 text-sm font-medium text-indigo-800"
+                      className="inline-flex items-center rounded-full bg-white border border-gray-300 px-3 py-0.5 text-sm font-medium text-gray-700"
                     >
                       {filter.column}: {filter.value}
                       <button
                         type="button"
-                        className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500"
+                        className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
                         onClick={filter.onRemove}
                         aria-label={`Remove filter for ${filter.value}`}
                       >

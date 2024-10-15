@@ -1,0 +1,367 @@
+{
+  "20": {
+    "ids": [
+      "1",
+      "38"
+    ],
+    "tags": [
+      "Data Ingestion Speed",
+      "Data Import Performance",
+      "Large Dataset Handling",
+      "Performance Improvement",
+      "Customer Need"
+    ],
+    "importance_score": 3.0,
+    "customer_impact": 2
+  },
+  "11": {
+    "ids": [
+      "2",
+      "13",
+      "26"
+    ],
+    "tags": [
+      "Feature Request",
+      "CSV File Support",
+      "Data Upload",
+      "File Format Compatibility",
+      "Customer Need"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 3
+  },
+  "7": {
+    "ids": [
+      "3",
+      "37",
+      "41"
+    ],
+    "tags": [
+      "Data Mapping Error",
+      "Data Corruption",
+      "Data Merge Conflict",
+      "Bug Report",
+      "Data Processing Issue",
+      "Customer Dataset Issue",
+      "Data Integrity",
+      "Data Handling Bug"
+    ],
+    "importance_score": 1.6666666666666667,
+    "customer_impact": 3
+  },
+  "16": {
+    "ids": [
+      "4",
+      "39"
+    ],
+    "tags": [
+      "UI Improvement",
+      "Dashboard Usability",
+      "Navigation Enhancement",
+      "Performance Bug",
+      "Data Load Issue",
+      "User Experience",
+      "Dashboard Freezing"
+    ],
+    "importance_score": 2.5,
+    "customer_impact": 1
+  },
+  "6": {
+    "ids": [
+      "5",
+      "14",
+      "19",
+      "23",
+      "46"
+    ],
+    "tags": [
+      "Real-Time Data Processing",
+      "Data Anomaly Detection",
+      "Automated Reporting",
+      "Predictive Analysis",
+      "AI-Powered Insights",
+      "Feature Request",
+      "Data Insights",
+      "Analytics Enhancement",
+      "Customer Interaction Analysis"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 4
+  },
+  "9": {
+    "ids": [
+      "6",
+      "24"
+    ],
+    "tags": [
+      "Bug",
+      "Login Failure",
+      "User Permissions",
+      "Authentication Issues",
+      "Access Control",
+      "Intermittent Issue",
+      "Security",
+      "User Experience"
+    ],
+    "importance_score": 2.5,
+    "customer_impact": 2
+  },
+  "2": {
+    "ids": [
+      "7",
+      "18",
+      "31"
+    ],
+    "tags": [
+      "Feature Request: Data Visualization",
+      "UI/UX: Chart Display Bug",
+      "Bug: Data Integrity",
+      "Device Compatibility Issue",
+      "Improvement: Insights Representation"
+    ],
+    "importance_score": 1.6666666666666667,
+    "customer_impact": 3
+  },
+  "5": {
+    "ids": [
+      "8",
+      "15"
+    ],
+    "tags": [
+      "Bug",
+      "Time Zone Issue",
+      "Data Timestamps",
+      "User Profile Error",
+      "Data Saving Issue",
+      "UI/UX Bug"
+    ],
+    "importance_score": 1.5,
+    "customer_impact": 1
+  },
+  "4": {
+    "ids": [
+      "9",
+      "25",
+      "42"
+    ],
+    "tags": [
+      "Feature Request",
+      "Multilingual Support",
+      "Global Audience",
+      "Multi-Tenant Architecture",
+      "Large Organizations",
+      "Multi-Channel Integration",
+      "Communication Channels",
+      "Scalability"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 3
+  },
+  "12": {
+    "ids": [
+      "10",
+      "35"
+    ],
+    "tags": [
+      "Data Sync Bug",
+      "Third-Party Integration Issue",
+      "Session Timeout Bug",
+      "User Experience Disruption",
+      "Integration Reliability"
+    ],
+    "importance_score": 2.5,
+    "customer_impact": 2
+  },
+  "15": {
+    "ids": [
+      "11"
+    ],
+    "tags": [
+      "Feature Request",
+      "Slack Integration",
+      "Notifications",
+      "Third-Party Integration"
+    ],
+    "importance_score": 3.0,
+    "customer_impact": 1
+  },
+  "19": {
+    "ids": [
+      "12"
+    ],
+    "tags": [
+      "Mobile Usability",
+      "Accessibility Improvement",
+      "UI/UX Enhancement",
+      "Feature Request",
+      "Mobile Optimization"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 1
+  },
+  "3": {
+    "ids": [
+      "16",
+      "34"
+    ],
+    "tags": [
+      "Feature Request",
+      "Custom Alerts",
+      "User Customization",
+      "Custom Fields",
+      "Data Personalization",
+      "User Experience Enhancement"
+    ],
+    "importance_score": 1.0,
+    "customer_impact": 2
+  },
+  "18": {
+    "ids": [
+      "17"
+    ],
+    "tags": [
+      "Data Security",
+      "Security Improvement",
+      "Feature Request",
+      "Data Protection",
+      "High Priority"
+    ],
+    "importance_score": 3.0,
+    "customer_impact": 1
+  },
+  "8": {
+    "ids": [
+      "20",
+      "47"
+    ],
+    "tags": [
+      "Notification Delays",
+      "User Frustration",
+      "UI Glitches",
+      "User Experience",
+      "Bug Report",
+      "UI/UX Issues"
+    ],
+    "importance_score": 3.0,
+    "customer_impact": 2
+  },
+  "14": {
+    "ids": [
+      "21"
+    ],
+    "tags": [
+      "API Documentation",
+      "Improvement",
+      "Examples Needed",
+      "Structure Enhancement",
+      "Developer Experience"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 1
+  },
+  "13": {
+    "ids": [
+      "22",
+      "29",
+      "45"
+    ],
+    "tags": [
+      "Data Import Errors",
+      "Data Export Formatting",
+      "Data Validation Issues",
+      "Import/Export Bugs",
+      "Data Processing Bugs",
+      "File Format Issues",
+      "Import Validation Errors"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 2
+  },
+  "17": {
+    "ids": [
+      "27",
+      "36"
+    ],
+    "tags": [
+      "Feature Request",
+      "Data Management",
+      "Advanced Filtering",
+      "Advanced Search",
+      "Data Query Enhancement",
+      "UI/UX Improvement"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 2
+  },
+  "0": {
+    "ids": [
+      "28",
+      "40"
+    ],
+    "tags": [
+      "Feature Request",
+      "Audit Trail",
+      "Data Tracking",
+      "Security",
+      "Role-Based Access Control",
+      "User Permissions",
+      "Access Levels",
+      "Data Access Control",
+      "User Roles",
+      "Product Improvement"
+    ],
+    "importance_score": 1.0,
+    "customer_impact": 2
+  },
+  "10": {
+    "ids": [
+      "30",
+      "33"
+    ],
+    "tags": [
+      "Feature Request",
+      "Single Sign-On",
+      "SSO",
+      "Enterprise Users",
+      "Authentication",
+      "Security",
+      "User Management",
+      "Integration"
+    ],
+    "importance_score": 2.0,
+    "customer_impact": 2
+  },
+  "1": {
+    "ids": [
+      "32",
+      "44",
+      "48"
+    ],
+    "tags": [
+      "User Training Materials",
+      "Tutorials Enhancement",
+      "User Feedback Mechanism",
+      "Feedback Collection Improvement",
+      "Onboarding Process",
+      "New User Experience",
+      "User Education",
+      "Customer Onboarding"
+    ],
+    "importance_score": 2.6666666666666665,
+    "customer_impact": 3
+  },
+  "21": {
+    "ids": [
+      "43"
+    ],
+    "tags": [
+      "Bug",
+      "Data Duplication",
+      "Data Integrity",
+      "High Priority",
+      "System Issue"
+    ],
+    "importance_score": 1.0,
+    "customer_impact": 1
+  }
+}

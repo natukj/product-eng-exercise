@@ -1,98 +1,129 @@
-import cx from "classnames";
-import { useState } from "react";
-import { FeedbackGroup } from "../hooks";
+import React from "react";
 import { DataTable } from "./DataTable";
+import { Filters, Feedback, FeedbackGroup } from "../types";
+import { AccessorFn, Row } from "@tanstack/react-table";
 
-const importanceValue = {
-  High: 2,
-  Medium: 1,
-  Low: 0,
-} as const;
+type GroupsDataTableProps = {
+  data: FeedbackGroup[];
+  filters: Filters;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  openFilters: { [key: string]: boolean };
+  toggleFilter: (columnName: string) => void;
+};
 
-export function GroupsDataTable({ data }: { data: FeedbackGroup[] }) {
-  const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
+const IMPORTANCE_OPTIONS = ["High", "Medium", "Low"];
+const TYPE_OPTIONS = ["Sales", "Customer", "Research"];
+const CUSTOMER_OPTIONS = [
+  "Loom",
+  "Ramp",
+  "Brex",
+  "Vanta",
+  "Notion",
+  "Linear",
+  "OpenAI",
+];
+
+export function GroupsDataTable({
+  data,
+  filters,
+  setFilters,
+  openFilters,
+  toggleFilter,
+}: GroupsDataTableProps) {
+  const handleImportanceFilterChange = (values: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      importance: values as Filters["importance"],
+    }));
+  };
+
+  const handleTypeFilterChange = (values: string[]) => {
+    setFilters((prev) => ({ ...prev, type: values as Filters["type"] }));
+  };
+
+  const handleCustomerFilterChange = (values: string[]) => {
+    setFilters((prev) => ({
+      ...prev,
+      customer: values as Filters["customer"],
+    }));
+  };
+
+  const nameCellRenderer: AccessorFn<Feedback> = (row) => (
+    <div className="py-3">
+      <div className="mb-2 font-semibold">{row.name}</div>
+      <div className="text-sm">{row.description}</div>
+    </div>
+  );
+
+  const importanceCellRenderer: AccessorFn<Feedback> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.importance}</div>
+    </div>
+  );
+
+  const typeCellRenderer: AccessorFn<Feedback> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.type}</div>
+    </div>
+  );
+
+  const customerCellRenderer: AccessorFn<Feedback> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{row.customer}</div>
+    </div>
+  );
+
+  const dateCellRenderer: AccessorFn<Feedback> = (row) => (
+    <div className="py-3">
+      <div className="mb-2">{new Date(row.date).toLocaleDateString()}</div>
+    </div>
+  );
+
+  const schema = [
+    {
+      cellRenderer: nameCellRenderer,
+      headerName: "Name",
+    },
+    {
+      cellRenderer: importanceCellRenderer,
+      headerName: "Importance",
+      filterType: "multi-select" as const,
+      filterOptions: IMPORTANCE_OPTIONS,
+      filterValue: filters.importance,
+      onFilterChange: handleImportanceFilterChange,
+    },
+    {
+      cellRenderer: typeCellRenderer,
+      headerName: "Type",
+      filterType: "multi-select" as const,
+      filterOptions: TYPE_OPTIONS,
+      filterValue: filters.type,
+      onFilterChange: handleTypeFilterChange,
+    },
+    {
+      cellRenderer: customerCellRenderer,
+      headerName: "Customer",
+      filterType: "multi-select" as const,
+      filterOptions: CUSTOMER_OPTIONS,
+      filterValue: filters.customer,
+      onFilterChange: handleCustomerFilterChange,
+    },
+    {
+      cellRenderer: dateCellRenderer,
+      headerName: "Date",
+      sortingFunction: (a: Row<Feedback>, b: Row<Feedback>) =>
+        new Date(a.original.date).getTime() -
+        new Date(b.original.date).getTime(),
+    },
+  ];
 
   return (
-    <div className=" hide-scroll-bar flex h-full w-full align-top">
-      <div
-        className="hide-scroll-bar h-full overflow-y-auto "
-        style={{ width: 500 }}
-      >
-        {data.map((group, index) => (
-          <div
-            key={`grouped-feedback-${index}`}
-            onMouseDown={() => setSelectedGroupIndex(index)}
-            className={cx(" border-b px-6 py-4 hover:cursor-default", {
-              "bg-primary-action-light": selectedGroupIndex === index,
-              "hover:bg-hover-gray": selectedGroupIndex !== index,
-            })}
-          >
-            <div className="mb-2 text-base font-semibold">{group.name}</div>
-          </div>
-        ))}
-      </div>
-      <div className="bg-dusty-white w-full flex-1 p-4">
-        <DataTable
-          fullWidth
-          data={(data[selectedGroupIndex]?.feedback ?? [])
-            .sort(
-              (a, b) =>
-                importanceValue[b.importance] - importanceValue[a.importance]
-            )
-            .map((feedback) => {
-              return {
-                id: feedback.id,
-                name: feedback.name,
-                description: feedback.description,
-                importance: feedback.importance,
-                customerName: feedback.customer,
-                date: feedback.date,
-                type: feedback.type,
-              };
-            })}
-          schema={[
-            {
-              headerName: "Description",
-              cellRenderer: (row) => (
-                <div className="py-3">
-                  <div className="font-semibold">{row.name}</div>
-                </div>
-              ),
-            },
-            {
-              headerName: "Priority",
-              cellRenderer: (row) => (
-                <div className="whitespace-nowrap text-sm">
-                  {row.importance}
-                </div>
-              ),
-            },
-            {
-              headerName: "Type",
-              cellRenderer: (row) => (
-                <div className="whitespace-nowrap text-sm">{row.type}</div>
-              ),
-            },
-            {
-              headerName: "Customer",
-              cellRenderer: (row) => (
-                <div className="whitespace-nowrap text-sm">
-                  {row.customerName}
-                </div>
-              ),
-            },
-            {
-              headerName: "Date",
-              cellRenderer: (row) =>
-                row.date ? (
-                  <div className="whitespace-nowrap text-sm">
-                    {new Date(row.date).toLocaleDateString()}
-                  </div>
-                ) : undefined,
-            },
-          ]}
-        />
-      </div>
-    </div>
+    <DataTable
+      fullWidth
+      data={data.flatMap((group) => group.feedback as unknown as Feedback[])}
+      openFilters={openFilters}
+      toggleFilter={toggleFilter}
+      schema={schema}
+    />
   );
 }
